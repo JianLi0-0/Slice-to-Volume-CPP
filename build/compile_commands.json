@@ -1,0 +1,22 @@
+[
+{
+  "directory": "/Users/lijian/Local/ITK/program/build",
+  "command": "/usr/bin/clang++ -DH5_BUILT_AS_DYNAMIC_LIB -DITK_IO_FACTORY_REGISTER_MANAGER -I/Users/lijian/Local/ITK/program/build/ITKFactoryRegistration -I/Users/lijian/Local/ITK/program/include/optim -I/Users/lijian/Local/ITK/program/include/itk_img -I/Users/lijian/Local/ITK/program/include/optimization -I/usr/local/include/eigen3 -isystem /usr/local/include/ITK-5.2 -isystem /usr/local/include -isystem /opt/homebrew/include/vtk-9.0 -isystem /opt/homebrew/include -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -std=gnu++11 -o CMakeFiles/HelloInsight.dir/HelloInsight.cpp.o -c /Users/lijian/Local/ITK/program/HelloInsight.cpp",
+  "file": "/Users/lijian/Local/ITK/program/HelloInsight.cpp"
+},
+{
+  "directory": "/Users/lijian/Local/ITK/program/build",
+  "command": "/usr/bin/clang++ -DH5_BUILT_AS_DYNAMIC_LIB -DITK_IO_FACTORY_REGISTER_MANAGER -I/Users/lijian/Local/ITK/program/build/ITKFactoryRegistration -I/Users/lijian/Local/ITK/program/include/optim -I/Users/lijian/Local/ITK/program/include/itk_img -I/Users/lijian/Local/ITK/program/include/optimization -I/usr/local/include/eigen3 -isystem /usr/local/include/ITK-5.2 -isystem /usr/local/include -isystem /opt/homebrew/include/vtk-9.0 -isystem /opt/homebrew/include -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -std=gnu++11 -o CMakeFiles/HelloInsight.dir/ITKImgProcess.cpp.o -c /Users/lijian/Local/ITK/program/ITKImgProcess.cpp",
+  "file": "/Users/lijian/Local/ITK/program/ITKImgProcess.cpp"
+},
+{
+  "directory": "/Users/lijian/Local/ITK/program/build",
+  "command": "/usr/bin/clang++ -DH5_BUILT_AS_DYNAMIC_LIB -DITK_IO_FACTORY_REGISTER_MANAGER -I/Users/lijian/Local/ITK/program/build/ITKFactoryRegistration -I/Users/lijian/Local/ITK/program/include/optim -I/Users/lijian/Local/ITK/program/include/itk_img -I/Users/lijian/Local/ITK/program/include/optimization -I/usr/local/include/eigen3 -isystem /usr/local/include/ITK-5.2 -isystem /usr/local/include -isystem /opt/homebrew/include/vtk-9.0 -isystem /opt/homebrew/include -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -std=gnu++11 -o CMakeFiles/HelloInsight.dir/Optimization.cpp.o -c /Users/lijian/Local/ITK/program/Optimization.cpp",
+  "file": "/Users/lijian/Local/ITK/program/Optimization.cpp"
+},
+{
+  "directory": "/Users/lijian/Local/ITK/program/build",
+  "command": "/usr/bin/clang++ -DH5_BUILT_AS_DYNAMIC_LIB -DITK_IO_FACTORY_REGISTER_MANAGER -I/Users/lijian/Local/ITK/program/build/ITKFactoryRegistration -I/Users/lijian/Local/ITK/program/include/optim -I/Users/lijian/Local/ITK/program/include/itk_img -I/Users/lijian/Local/ITK/program/include/optimization -I/usr/local/include/eigen3 -isystem /usr/local/include/ITK-5.2 -isystem /usr/local/include -isystem /opt/homebrew/include/vtk-9.0 -isystem /opt/homebrew/include -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -std=gnu++11 -o CMakeFiles/Test.dir/test.cpp.o -c /Users/lijian/Local/ITK/program/test.cpp",
+  "file": "/Users/lijian/Local/ITK/program/test.cpp"
+}
+]
