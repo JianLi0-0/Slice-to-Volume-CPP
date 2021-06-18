@@ -1,4 +1,0 @@
-/Users/lijian/Local/ITK/program/build/CMakeFiles/rebuild_cache.dir
-/Users/lijian/Local/ITK/program/build/CMakeFiles/edit_cache.dir
-/Users/lijian/Local/ITK/program/build/CMakeFiles/HelloInsight.dir
-/Users/lijian/Local/ITK/program/build/CMakeFiles/Test.dir
