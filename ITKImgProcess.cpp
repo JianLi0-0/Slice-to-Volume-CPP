@@ -2,7 +2,6 @@
 
 VolumeType::Pointer ExtractSliceFromVolume(VolumeType::Pointer volume, TransformType::Pointer transformation, float sliceWidth, float sliceHeight, VolumeType::SpacingType outputSpacing)
 {
-    // auto begin = std::chrono::high_resolution_clock::now();
     typename VolumeType::SizeType inputSize;
     inputSize[0] = sliceWidth; inputSize[1] = sliceHeight; inputSize[2] = 1;
     // const typename VolumeType::RegionType  inputRegion = volume->GetLargestPossibleRegion();
@@ -15,18 +14,19 @@ VolumeType::Pointer ExtractSliceFromVolume(VolumeType::Pointer volume, Transform
     using ResampleFilterType = itk::ResampleImageFilter<VolumeType, VolumeType>;
     typename ResampleFilterType::Pointer resampleFilter = ResampleFilterType::New();
 
-    // auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - begin);
-    // cout<<"runtime: "<< elapsed.count() * 1e-9 <<endl;
-
     resampleFilter->SetInput(volume);
     resampleFilter->SetTransform(transformation);
     resampleFilter->SetInterpolator(interpolator);
     resampleFilter->SetSize(inputSize);
     resampleFilter->SetOutputSpacing(outputSpacing);
     // resampleFilter->SetOutputOrigin(inputOrigin);
+
+    // auto begin = std::chrono::high_resolution_clock::now();
     resampleFilter->Update();
+    // auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - begin);
+    // cout<<"Extract Update(): "<< elapsed.count() * 1e-9 <<endl;
     
-    return resampleFilter->GetOutput();;
+    return resampleFilter->GetOutput();
 }
 
 double SumOfSquaredDifferences(VolumeType::Pointer imageOne, VolumeType::Pointer imageTwo, float sliceWidth, float sliceHeight)
@@ -130,6 +130,37 @@ double SSD3(VolumeType::Pointer imageOne, VolumeType::Pointer imageTwo)
     // cout<<"SD bufferRange: "<< elapsed.count() * 1e-9 <<endl;
     auto sum = std::inner_product(bufferRange1.begin(), bufferRange1.end(), bufferRange2.begin(), 0, myaccumulator, myproduct);
     // auto sum = std::transform_reduce(std::execution::par_unseq, bufferRange1.begin(), bufferRange1.end(), bufferRange2.begin(), 0, myaccumulator, myproduct);
+    return double(sum);
+}
+
+double SSD4(VolumeType::Pointer imageOne, VolumeType::Pointer imageTwo)
+{
+    itk::ImageBufferRange<VolumeType> bufferRange1{ *imageOne };
+    itk::ImageBufferRange<VolumeType> bufferRange2{ *imageTwo };
+    int sum = 0;
+    auto it_1 = bufferRange1.begin(),it_2 = bufferRange2.begin();
+    for(int i = 0; i<bufferRange1.size(); ++i)
+    {
+        auto temp = *(it_1+i) - *(it_2+i);
+        sum += temp * temp;
+    }
+    cout << "no omp ";
+    return double(sum);
+}
+
+double SSD5(VolumeType::Pointer imageOne, VolumeType::Pointer imageTwo)
+{
+    itk::ImageBufferRange<VolumeType> bufferRange1{ *imageOne };
+    itk::ImageBufferRange<VolumeType> bufferRange2{ *imageTwo };
+    int sum = 0;
+    auto it_1 = bufferRange1.begin(),it_2 = bufferRange2.begin();
+    #pragma omp parallel for num_threads(2) reduction(+:sum)
+    for(int i = 0; i<bufferRange1.size(); i++)
+    {
+        auto temp = *(it_1+i) - *(it_2+i);
+        sum += temp * temp;
+    }
+    cout << "omp ";
     return double(sum);
 }
 

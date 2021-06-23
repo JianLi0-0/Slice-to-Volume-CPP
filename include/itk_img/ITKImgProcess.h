@@ -11,9 +11,11 @@
 #include <cmath>
 
 #include <algorithm>
-#include <execution>
+// #include <execution>
 #include <numeric>
 #include <vector>
+
+#include <omp.h>
 
 #include "itkSquaredDifferenceImageFilter.h"
 #include "itkStatisticsImageFilter.h"
@@ -37,6 +39,8 @@ SliceType::Pointer ExtractSliceFromVolume2(VolumeType::Pointer volume, Transform
 double SumOfSquaredDifferences(VolumeType::Pointer imageOne, VolumeType::Pointer imageTwo, float sliceWidth, float sliceHeight);
 double SSD2(VolumeType::Pointer imageOne, VolumeType::Pointer imageTwo, float sliceWidth, float sliceHeight, IntImgType::Pointer& squaredDiffImg);
 double SSD3(VolumeType::Pointer imageOne, VolumeType::Pointer imageTwo);
+double SSD4(VolumeType::Pointer imageOne, VolumeType::Pointer imageTwo);
+double SSD5(VolumeType::Pointer imageOne, VolumeType::Pointer imageTwo);
 void SquaredDifferences(VolumeType::Pointer& image, VolumeType::Pointer& image2, IntImgType::Pointer& squaredDiffImg);
 
 namespace Functor

@@ -25,7 +25,7 @@ int main(int, char * argv[])
     using ReaderType = itk::ImageFileReader<VolumeType>;
     ReaderType::Pointer reader = ReaderType::New();
     // const char * filename = argv[1];
-    reader->SetFileName("/Users/lijian/Local/ITK/program/data/volumen/thyroid.mhd");
+    reader->SetFileName("/home/kuka/SVR/program/data/volumen/thyroid.mhd");
     reader->Update();
     
     VolumeType::Pointer volume = reader->GetOutput();
@@ -53,28 +53,28 @@ int main(int, char * argv[])
     auto begin = std::chrono::high_resolution_clock::now();
     auto V1 = ExtractSliceFromVolume(volume, transformation, sliceWidth, sliceHeight, spacing);
     auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - begin);
-    cout<<"runtime:   "<< elapsed.count() * 1e-9 <<endl;
+    cout<<"Extract runtime:   "<< elapsed.count() * 1e-9 <<endl;
 
     t[2] = 60;
     transformation->SetTranslation(t);
     auto V2 = ExtractSliceFromVolume(volume, transformation, sliceWidth, sliceHeight, spacing);
 
     begin = std::chrono::high_resolution_clock::now();
-    auto sum = SumOfSquaredDifferences(V1, V2, sliceWidth, sliceHeight);
-    elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - begin);
-    cout<<"SumOfSquaredDifferences runtime:   "<< elapsed.count() * 1e-9 <<endl;
-    cout << "sum: " << sum << endl;
-
-    begin = std::chrono::high_resolution_clock::now();
-    sum = SSD2(V1, V2, sliceWidth, sliceHeight, optimization.squaredDiffImg);
-    elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - begin);
-    cout<<"SSD2 runtime:   "<< elapsed.count() * 1e-9 <<endl;
-    cout << "sum: " << sum << endl;
-
-    begin = std::chrono::high_resolution_clock::now();
-    sum = SSD3(V1, V2);
+    auto sum = SSD3(V1, V2);
     elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - begin);
     cout<<"SSD3 runtime:   "<< elapsed.count() * 1e-9 <<endl;
+    cout << "sum: " << sum << endl;
+
+    begin = std::chrono::high_resolution_clock::now();
+    sum = SSD4(V1, V2);
+    elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - begin);
+    cout<<"SSD4 runtime:   "<< elapsed.count() * 1e-9 <<endl;
+    cout << "sum: " << sum << endl;
+
+    begin = std::chrono::high_resolution_clock::now();
+    sum = SSD5(V1, V2);
+    elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - begin);
+    cout<<"SSD5 runtime:   "<< elapsed.count() * 1e-9 <<endl;
     cout << "sum: " << sum << endl;
     
 
@@ -98,8 +98,12 @@ int main(int, char * argv[])
     VolumeType::Pointer goalSlice = V1;
     Eigen::VectorXd initialTransform;
     optimization.SetVolume(volume);
+    t[2] = 40;
+    transformation->SetTranslation(t);
     cout << "Ground Truth: \n " << optimization.ITKTransformToEigen(transformation) << endl;
-    t[0] = 7; t[1] = 7; t[2] = 43;  transformation->SetRotation(0.107,0.117,0.117);
+    TransformType::Pointer stored_ground_truth = TransformType::New();
+    stored_ground_truth->SetParameters(transformation->GetParameters());
+    t[0] = 8; t[1] = 8; t[2] = 64;  transformation->SetRotation(0.102,0.112,0.112);
     transformation->SetTranslation(t);
     initialTransform =  optimization.ITKTransformToEigen(transformation);
     cout << "initialTransform: \n " << initialTransform << endl;
@@ -110,12 +114,18 @@ int main(int, char * argv[])
     std::chrono::duration<double> elapsed_seconds = end-start;
     
     if (success) {
-        std::cout << "de: Registration successfully.\n"
-                  << "elapsed time: " << elapsed_seconds.count() << "s\n";
+        std::cout << "Registration successfully.\n"
+                  << "elapsed time: " << elapsed_seconds.count() << "s\n"
+                  << "errors: \n" << initialTransform - optimization.ITKTransformToEigen(stored_ground_truth) << std::endl;
     } else {
-        std::cout << "de: Ackley test completed unsuccessfully." << std::endl;
+        std::cout << "Failed." << std::endl;
     }
-    std::cout << "\nde: solution :\n" << initialTransform << std::endl;
+    std::cout << "\n solution :\n" << initialTransform << std::endl;
+
+    auto V3 = ExtractSliceFromVolume(volume, optimization.EigenToITKTransform(initialTransform), sliceWidth, sliceHeight, spacing);
+    cout << "SSD: " << SSD3(V1, V3) << endl;
+
+
 
 
     return 0;
