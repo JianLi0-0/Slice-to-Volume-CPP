@@ -13,8 +13,8 @@ class Optimization
         VolumeType::Pointer slice;
         VolumeType::SpacingType outputSpacing;
         FilterType::Pointer filter;
-        float sliceWidth = 256;
-        float sliceHeight = 256;
+        float sliceWidth;
+        float sliceHeight;
 
     public:
         Optimization();
@@ -27,7 +27,7 @@ class Optimization
         Eigen::VectorXd ITKTransformToEigen(const TransformType::Pointer tf);
         double SimilaritySSDFcn(const Eigen::VectorXd& x, Eigen::VectorXd* grad_out, void* opt_data);
         bool Optimize(VolumeType::Pointer goalSlice, Eigen::VectorXd& initialTransform);
-        // double SSD3(VolumeType::Pointer imageOne, VolumeType::Pointer imageTwo, float sliceWidth, float sliceHeight);
+        void SetSliceSize(float width, float height);
 };
 
 

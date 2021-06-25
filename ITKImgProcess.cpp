@@ -4,10 +4,6 @@ VolumeType::Pointer ExtractSliceFromVolume(VolumeType::Pointer volume, Transform
 {
     typename VolumeType::SizeType inputSize;
     inputSize[0] = sliceWidth; inputSize[1] = sliceHeight; inputSize[2] = 1;
-    // const typename VolumeType::RegionType  inputRegion = volume->GetLargestPossibleRegion();
-    // typename VolumeType::SizeType    inputSize = inputRegion.GetSize();
-    // const typename VolumeType::SpacingType inputSpacing = volume->GetSpacing();
-    // const typename VolumeType::PointType   inputOrigin = volume->GetOrigin();
 
     using LinearInterpolatorType = itk::LinearInterpolateImageFunction<VolumeType, double>;
     typename LinearInterpolatorType::Pointer interpolator = LinearInterpolatorType::New();

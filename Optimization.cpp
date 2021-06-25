@@ -4,7 +4,7 @@ Optimization::Optimization():squaredDiffImg(IntImgType::New()), filter(FilterTyp
 {
     using ReaderType = itk::ImageFileReader<VolumeType>;
     ReaderType::Pointer reader = ReaderType::New();
-    reader->SetFileName("/Users/lijian/Local/ITK/program/data/volumen/thyroid.mhd");
+    reader->SetFileName("/home/kuka/SVR/program/data/volumen/thyroid.mhd");
     reader->Update();
     volume = reader->GetOutput();
     outputSpacing = volume->GetSpacing();
@@ -88,14 +88,8 @@ bool Optimization::Optimize(VolumeType::Pointer goalSlice, Eigen::VectorXd& init
 }
 
 
-// double Optimization::SSD3(VolumeType::Pointer imageOne, VolumeType::Pointer imageTwo, float sliceWidth, float sliceHeight)
-// {
-//     double sum = 0;
-
-//     filter->SetInput1(imageOne);
-//     filter->SetInput2(imageTwo);
-//     filter->Update();
-//     auto squaredDifference = filter->GetOutput();
-    
-//     return sum;
-// }
+void Optimization::SetSliceSize(float width, float height)
+{
+    sliceWidth = width;
+    sliceHeight = height;
+}

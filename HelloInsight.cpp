@@ -34,12 +34,12 @@ int main(int, char * argv[])
     transformation->SetIdentity();
     transformation->SetRotation(0.11,0.12,0.13);
     itk::Vector<double, 3> t;
-    t[0] = 5;t[1] = 5;t[2] = 40;
+    t[0] = 15;t[1] = 5;t[2] = 40;
     transformation->SetTranslation(t);
     
     // std::cout << transformation << std::endl;
-    float sliceWidth = 256;
-    float sliceHeight = 256;
+    float sliceWidth = 150;
+    float sliceHeight = 200;
     SliceType::SpacingType outputSpacing;
     // outputSpacing[0] = 
     // try
@@ -48,6 +48,7 @@ int main(int, char * argv[])
 
 
     Optimization optimization;
+    optimization.SetSliceSize(sliceWidth, sliceHeight);
 
     cout<<"start:"<<endl;
     auto begin = std::chrono::high_resolution_clock::now();
@@ -103,10 +104,12 @@ int main(int, char * argv[])
     cout << "Ground Truth: \n " << optimization.ITKTransformToEigen(transformation) << endl;
     TransformType::Pointer stored_ground_truth = TransformType::New();
     stored_ground_truth->SetParameters(transformation->GetParameters());
-    t[0] = 8; t[1] = 8; t[2] = 64;  transformation->SetRotation(0.102,0.112,0.112);
+    t[0] = 16; t[1] = 6; t[2] = 42;  transformation->SetRotation(0.111,0.121,0.131);
     transformation->SetTranslation(t);
     initialTransform =  optimization.ITKTransformToEigen(transformation);
     cout << "initialTransform: \n " << initialTransform << endl;
+
+    auto V4 = ExtractSliceFromVolume(volume, optimization.EigenToITKTransform(initialTransform), sliceWidth, sliceHeight, spacing);
     
     std::chrono::time_point<std::chrono::system_clock> start = std::chrono::system_clock::now();
     auto success = optimization.Optimize(goalSlice, initialTransform);
@@ -124,6 +127,17 @@ int main(int, char * argv[])
 
     auto V3 = ExtractSliceFromVolume(volume, optimization.EigenToITKTransform(initialTransform), sliceWidth, sliceHeight, spacing);
     cout << "SSD: " << SSD3(V1, V3) << endl;
+    using WriterType = itk::ImageFileWriter<VolumeType>;
+    WriterType::Pointer writer = WriterType::New();
+    writer->SetFileName("current.png");
+    writer->SetInput(V1);
+    writer->Update();
+    writer->SetFileName("result.png");
+    writer->SetInput(V3);
+    writer->Update();
+    writer->SetFileName("init.png");
+    writer->SetInput(V4);
+    writer->Update();
 
 
 
